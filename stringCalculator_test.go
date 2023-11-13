@@ -87,7 +87,11 @@ func Test_challenge_steps(t *testing.T) {
 		t.Run(fmt.Sprintf(step.title), func(t *testing.T) {
 			for i, testCase := range step.testCases {
 				t.Run(fmt.Sprintf("Test Case %v", i), func(t *testing.T) {
-					executeTest(testCase, t)
+					if !testCase.errorExpected {
+						executeTest(testCase, t)
+					} else {
+						executeErrorTest(testCase, t)
+					}
 				})
 			}
 		})
@@ -95,6 +99,10 @@ func Test_challenge_steps(t *testing.T) {
 }
 
 func executeTest(testCase testCase, t *testing.T) {
+	if testCase.errorExpected {
+		t.Fatalf("The test case is running on the wrong executor.\nPlease check the test case configuration.")
+	}
+
 	input := testCase.input
 	expected := testCase.expected
 
@@ -108,5 +116,28 @@ func executeTest(testCase testCase, t *testing.T) {
 
 	if res != expected {
 		t.Fatalf(`Sum(%v) returned %d. Was expecting %d.`, printableInput, res, expected)
+	}
+}
+
+func executeErrorTest(testCase testCase, t *testing.T) {
+	if !testCase.errorExpected {
+		t.Fatalf("The test case is running on the wrong executor.\nPlease check the test case configuration.")
+	}
+
+	input := testCase.input
+	expected := testCase.errorMessage
+
+	res, err := Sum(input)
+
+	printableInput := strings.ReplaceAll(input, "\n", "\\n")
+
+	if err == nil {
+		t.Fatalf(`Sum(%v) did not returned the value %d. Was expecting an error with the message "%v". `, printableInput, res, expected)
+	}
+
+	actual := err.Error()
+
+	if err.Error() != expected {
+		t.Fatalf(`Sum(%v) returned the error "%v". Was expecting "%v".`, printableInput, actual, expected)
 	}
 }
