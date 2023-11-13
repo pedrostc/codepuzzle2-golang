@@ -81,6 +81,41 @@ func Test_challenge_steps(t *testing.T) {
 				{input: "//*\n-1*-2*-10", errorMessage: "negatives not allowed: -1,-2,-10"},
 			},
 		},
+		{
+			title: "should ignore (not add) numbers greater than 1000.",
+			testCases: []testCase{
+				{input: "1001,2", expected: 2},
+				{input: "1000,2", expected: 1002},
+				{input: "///\n2000/6/1/1/1234/5/3000/8/1/9", expected: 31},
+				{input: "1\n2000,1\n10", expected: 12},
+			},
+		},
+		{
+			title: "should accept multi-character custom delimiter using this format: '//[delimiter]\\n(numbers…)'.",
+			testCases: []testCase{
+				{input: "//[;;;]\n1;;;2;;;3", expected: 6},
+				{input: "//[-_-]\n1-_-2-_-3-_-4-_-5", expected: 15},
+				{input: "//[//]\n4//6//3//7//1//1//1//1//8//1//9", expected: 42},
+				{input: "//[&.?!]\n1&.?!1&.?!1&.?!1&.?!1&.?!1", expected: 6},
+			},
+		},
+		{
+			title: "should allow multiple single character delimiters using this format: '//[delim1][delim2]...\\n(numbers…)'.",
+			testCases: []testCase{
+				{input: "//[;][*]\n1;2*3", expected: 6},
+				{input: "//[/][*]\n1/2/3**4/5", expected: 15},
+				{input: "//[:][_][^][-]\n4:6-3-7_1-1^1:1_8^1^9", expected: 42},
+				{input: "//[+][*][^]\n1^1+1^1*1*1", expected: 6},
+			},
+		},
+		{
+			title: "should allow multiple multi-characters delimiters using this format: '//[delim1][delim2]...\\n(numbers…)'.",
+			testCases: []testCase{
+				{input: "//[**][;]\n1;2**3", expected: 6},
+				{input: "//[//][***]\n1//2//3***4//5", expected: 15},
+				{input: "//[:)][:(]\n4:)6:(3:(7:)1:)1:)1:(1:)8:)1:)9", expected: 42},
+			},
+		},
 	}
 
 	for _, step := range steps {
