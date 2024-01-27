@@ -1,2 +1,2 @@
 ### To run the tests
-- Run the following command in the terminal: `go test --failfast`
+- Run the following command in the terminal: `go test ./...-failfast -v`
