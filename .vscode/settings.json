@@ -1,0 +1,23 @@
+{
+    "workbench.startupEditor": "readme",
+    "files.exclude": {
+        ".vscode/": true,
+        "LICENSE": true,
+        ".gitignore": true,
+        "runsettings.xml": true,
+        ".gitpod.yml": true,
+        ".gitpod.Dockerfile": true,
+        "go.mod": true,
+        "stringCalculator_test.go": true,
+    },
+    "search.exclude": {
+        ".vscode/": true,
+        "LICENSE": true,
+        ".gitignore": true,
+        "runsettings.xml": true,
+        ".gitpod.yml": true,
+        ".gitpod.Dockerfile": true,
+        "go.mod": true,
+        "stringCalculator_test.go": true,
+    }
+}
